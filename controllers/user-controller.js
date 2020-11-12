@@ -5,10 +5,10 @@ const bcrypt = require('bcryptjs');
 
 router.post('/create', function(req, res){
     User.create({
+        name: req.body.user.name, 
         email: req.body.user.email,
-       password: bcrypt.hashSync(req.body.user.password, 13), 
-       first_name: req.body.user.first_name, 
-       last_name: req.body.user.last_name
+       password: bcrypt.hashSync(req.body.user.password, 13) 
+    
     })
     .then(
         function createSuccess(user) {
