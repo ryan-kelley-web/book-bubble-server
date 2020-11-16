@@ -26,6 +26,7 @@ router.post('/create', (req, res) => {
 //Get books to read ---- goes to BookTable component --- if you click “see more” then it goes to Book to display one book with all the deets (i.e. /book/to-read)
 
 //Update book ---- goes to BookEdit component (i.e. /book/:id)
+// May need to change route to /:bookId
 router.put('/:id', (req, res) => {
     const updatedBook = {
         author: req.body.author,
@@ -41,6 +42,7 @@ router.put('/:id', (req, res) => {
 });
 
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
+// May need to change route to /:bookId
 router.delete('/:id', (req, res) => {
     Book.destroy({where: {id: req.params.bookId}})
         .then(() => res.status(200).json({message: 'Book has been deleted'}))
