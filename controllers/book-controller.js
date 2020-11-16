@@ -5,7 +5,7 @@ const validateSession = require('../middleware/validate-session');
 //Add books ---- (post) goes to BookCreate component (i.e. book/create)
 
 //Get books already read ---- if you click “see more” then it goes to Book to display one book with all the deets, (i.e. /book/read) 
-router.get('/book/read/:id', validateSession, (req, res) => { 
+router.get('/read', validateSession, (req, res) => { 
     let userid = req.user.id //make sure owner_id = req.user.id (check user model & rest of controller)
     book.findAll({
         where: {owner_id: userid, read_status: 'read'}
@@ -15,7 +15,7 @@ router.get('/book/read/:id', validateSession, (req, res) => {
 });
 
 //Get books currently reading ---- if you click “see more” then it goes to Book to display one book with all the deets (i.e. /book/reading)
-router.get('/book/reading/:id', validateSession, (req, res) => { 
+router.get('/reading', validateSession, (req, res) => { 
     let userid = req.user.id //make sure owner_id = req.user.id (check user model & rest of controller)
     book.findAll({
         where: {owner_id: userid, read_status: 'reading'}
@@ -25,7 +25,7 @@ router.get('/book/reading/:id', validateSession, (req, res) => {
 });
 
 //Get books to read --- if you click “see more” then it goes to Book to display one book with all the deets (i.e. /book/to-read)
-router.get('/book/to-read/:id', validateSession, (req, res) => { 
+router.get('/to-read', validateSession, (req, res) => { 
     let userid = req.user.id //make sure owner_id = req.user.id (check user model & rest of controller)
     book.findAll({
         where: {owner_id: userid, read_status: 'to-read'}
