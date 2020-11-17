@@ -66,7 +66,7 @@ router.put('/:id', (req, res) => {
         read_status: req.body.read_status,
     };
 
-    Book.update(updatedBook, {where: {id: req.params.bookId}})
+    Book.update(updatedBook, {where: {id: req.params.id}})
         .then(book => res.status(200).json(book))
         .catch(err => res.status(500).json({error: err}));
 });
@@ -74,7 +74,7 @@ router.put('/:id', (req, res) => {
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
 router.delete('/:id', (req, res) => {
-    Book.destroy({where: {id: req.params.bookId}})
+    Book.destroy({where: {id: req.params.id}})
         .then(() => res.status(200).json({message: 'Book has been deleted'}))
         .catch(err => res.status(500).json({error: err}));
 });
