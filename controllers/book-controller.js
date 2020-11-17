@@ -55,13 +55,6 @@ router.get('/to-read', validateSession, (req, res) => {
 //Update book ---- goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
 
-<<<<<<< HEAD
-    Book.update(updatedBook, {where: {id: req.params.bookId}})
-        .then(book => res.status(200).json(book))
-        .catch(err => res.status(500).json({error: err}));
-});
-=======
->>>>>>> e708d2680e66010f73139cf421d64e3d3a56a6e0
 
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
