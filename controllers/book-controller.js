@@ -9,8 +9,11 @@ router.post('/create', (req, res) => {
         author: req.body.author,
         title: req.body.title,
         genre: req.body.genre,
-        numOfPages: req.body.numOfPages,
+        total_pages: req.body.total_pages,
         rating: req.body.rating,
+        description: req.body.description,
+        year_published: req.body.year_published,
+        read_status: req.body.read_status,
         owner: req.user.id
     };
 
@@ -56,8 +59,11 @@ router.put('/:id', (req, res) => {
         author: req.body.author,
         title: req.body.title,
         genre: req.body.genre,
-        numOfPages: req.body.numOfPages,
-        rating: req.body.rating
+        total_pages: req.body.total_pages,
+        rating: req.body.rating,
+        description: req.body.description,
+        year_published: req.body.year_published,
+        read_status: req.body.read_status,
     };
 
     Book.update(updatedBook, {where: {id: req.params.bookId}})
