@@ -63,7 +63,7 @@ router.put('/:id', (req, res) => {
         rating: req.body.rating,
         description: req.body.description,
         year_published: req.body.year_published,
-        read_status: req.body.read_status
+        read_status: req.body.read_status,
     };
 
     Book.update(updatedBook, {where: {id: req.params.bookId}})
@@ -74,7 +74,7 @@ router.put('/:id', (req, res) => {
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
 router.delete('/:id', (req, res) => {
-    Book.destroy({where: {id: req.params.bookId}})
+    Book.destroy({where: {id: req.params.id}})
         .then(() => res.status(200).json({message: 'Book has been deleted'}))
         .catch(err => res.status(500).json({error: err}));
 });
@@ -93,20 +93,3 @@ Get books to read ---- goes to BookTable component --- if you click â€œsee moreâ
 Update book ---- goes to BookEdit component
 Delete book ----goes to BookEdit component
  */
-
-
-/*
-
-R*Home Compon
-R*Navbar Compon
-R*BookDojo Compon
-
-S*Book Create Compon
-S*Book Compon
-S*Book Edit/Delete Compon
-
-L*Reading Compon
-L*Read Compon
-L*To Read Compon
-
-*/ 
