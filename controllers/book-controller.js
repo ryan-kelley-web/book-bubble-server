@@ -28,7 +28,7 @@ router.get('/read', validateSession, (req, res) => {
     book.findAll({
         where: {owner_id: userid, read_status: 'read'}
     }) 
-        .then(logs => res.status(200).json(logs)) 
+        .then(books => res.status(200).json(books)) 
         .catch(err => res.status(500).json({error: err})) 
 });
 
@@ -38,7 +38,7 @@ router.get('/reading', validateSession, (req, res) => {
     book.findAll({
         where: {owner_id: userid, read_status: 'reading'}
     }) 
-        .then(logs => res.status(200).json(logs)) 
+        .then(books => res.status(200).json(books)) 
         .catch(err => res.status(500).json({error: err})) 
 });
 
@@ -48,7 +48,7 @@ router.get('/to-read', validateSession, (req, res) => {
     book.findAll({
         where: {owner_id: userid, read_status: 'to-read'}
     }) 
-        .then(logs => res.status(200).json(logs)) 
+        .then(books => res.status(200).json(books)) 
         .catch(err => res.status(500).json({error: err})) 
 });
 
@@ -64,6 +64,17 @@ router.delete('/:id', (req, res) => {
         .catch(err => res.status(500).json({error: err}));
 });
 
+//BookFinder/Get books by search
+router.get('/search/:query', validateSession, (req, res) => { 
+    {
+    const { query } = req.params; 
+    let userid = req.user.id;
+    book.findAll({ 
+        where: { owner_id: userid, title: { [Op.like]: `%${query}%`}, author: { [Op.like]: `%${query}%`} } //is this && or ||?
+    })
+    .then(books => res.status(200).json(books)) 
+    .catch(err => res.status(500).json({error: err})) 
+};
 
 module.exports = router; 
 
