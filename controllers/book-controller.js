@@ -9,8 +9,11 @@ router.post('/create', (req, res) => {
         author: req.body.author,
         title: req.body.title,
         genre: req.body.genre,
-        numOfPages: req.body.numOfPages,
+        total_pages: req.body.total_pages,
         rating: req.body.rating,
+        description: req.body.description,
+        year_published: req.body.year_published,
+        read_status: req.body.read_status,
         owner: req.user.id
     };
 
@@ -51,24 +54,12 @@ router.get('/to-read', validateSession, (req, res) => {
 
 //Update book ---- goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
-router.put('/:id', (req, res) => {
-    const updatedBook = {
-        author: req.body.author,
-        title: req.body.title,
-        genre: req.body.genre,
-        numOfPages: req.body.numOfPages,
-        rating: req.body.rating
-    };
 
-    Book.update(updatedBook, {where: {id: req.params.bookId}})
-        .then(book => res.status(200).json(book))
-        .catch(err => res.status(500).json({error: err}));
-});
 
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
 router.delete('/:id', (req, res) => {
-    Book.destroy({where: {id: req.params.bookId}})
+    Book.destroy({where: {id: req.params.id}})
         .then(() => res.status(200).json({message: 'Book has been deleted'}))
         .catch(err => res.status(500).json({error: err}));
 });
