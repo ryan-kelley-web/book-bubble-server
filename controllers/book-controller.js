@@ -17,7 +17,8 @@ router.post('/create', (req, res) => {
         owner: req.user.id
     };
 
-    Book.create(bookModel)
+    book.create(bookModel)
+        .then(book => console.log('Book Create:', book))
         .then(book => res.status(200).json(book))
         .catch(err => res.status(500).json({error: err}));
 });
@@ -28,7 +29,7 @@ router.get('/read', validateSession, (req, res) => {
     book.findAll({
         where: {owner_id: userid, read_status: 'read'}
     }) 
-        .then(logs => res.status(200).json(logs)) 
+        .then(books => res.status(200).json(logs)) 
         .catch(err => res.status(500).json({error: err})) 
 });
 
@@ -38,7 +39,7 @@ router.get('/reading', validateSession, (req, res) => {
     book.findAll({
         where: {owner_id: userid, read_status: 'reading'}
     }) 
-        .then(logs => res.status(200).json(logs)) 
+        .then(books => res.status(200).json(logs)) 
         .catch(err => res.status(500).json({error: err})) 
 });
 
@@ -48,7 +49,7 @@ router.get('/to-read', validateSession, (req, res) => {
     book.findAll({
         where: {owner_id: userid, read_status: 'to-read'}
     }) 
-        .then(logs => res.status(200).json(logs)) 
+        .then(books => res.status(200).json(logs)) 
         .catch(err => res.status(500).json({error: err})) 
 });
 
@@ -59,7 +60,7 @@ router.get('/to-read', validateSession, (req, res) => {
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
 router.delete('/:id', (req, res) => {
-    Book.destroy({where: {id: req.params.id}})
+    book.destroy({where: {id: req.params.id}})
         .then(() => res.status(200).json({message: 'Book has been deleted'}))
         .catch(err => res.status(500).json({error: err}));
 });
