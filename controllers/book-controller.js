@@ -70,7 +70,7 @@ router.put('/edit/:bookId', validateSession, function(req, res) {
 
     const query = { where: { owner_id: req.body.owner_id } }; //req.params.owner_id?
 
-    Book.update(updateBookInfo, query)
+    book.update(updateBookInfo, query)
     .then((book) => res.status(200).json({message: 'Your book has been edited successfully'})) // books plural?
     .catch(err=> res.status(500).json({error: err}));
 });
