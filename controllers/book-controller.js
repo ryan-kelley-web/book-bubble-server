@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const book = require('../db').import('../models/book');
+const { restart } = require('nodemon');
 const validateSession = require('../middleware/validate-session');
 
 //Add books ---- (post) goes to BookCreate component (i.e. book/create)
@@ -14,7 +15,7 @@ router.post('/create', (req, res) => {
         description: req.body.description,
         year_published: req.body.year_published,
         read_status: req.body.read_status,
-        owner: req.user.id
+        owner_id: req.user.id
     };
 
     Book.create(bookModel)
@@ -54,6 +55,24 @@ router.get('/to-read', validateSession, (req, res) => {
 
 //Update book ---- goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
+router.put('/edit/:bookId', validateSession, function(req, res) {
+    const updateBookInfo = {
+        author: req.body.author,
+        title: req.body.title,
+        genre: req.body.genre,
+        total_pages: req.body.total_pages,
+        rating: req.body.rating,
+        description: req.body.description,
+        year_published: req.body.year_published,
+        read_status: req.body.read_status,
+    };
+
+    const query = { where: { owner_id: req.body.owner_id } }; //req.params.owner_id?
+
+    Book.update(updateBookInfo, query)
+    .then((book) => res.status(200).json({message: 'Your book has been edited successfully'})) // books plural?
+    .catch(err=> res.status(500).json({error: err}));
+});
 
 
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
