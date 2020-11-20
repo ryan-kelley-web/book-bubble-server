@@ -96,10 +96,11 @@ router.delete("/:id", (req, res) => {
 
 //BookFinder/Get books by search
 router.get("/search/:query", validateSession, (req, res) => {
+  console.log(req);
   const { query } = req.params;
   let userid = req.user.id;
-  console.log(userid, query);
-  book
+ // console.log(userid, query);
+  Book
     .findAll(
         { where: {
         [Op.or]: [
