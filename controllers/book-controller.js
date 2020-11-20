@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const book = require("../db").import("../models/book");
+const Book = require("../db").import("../models/book"); //models should be uppercase per syntax std. RK via IM. 
 const { restart } = require("nodemon");
 const validateSession = require("../middleware/validate-session");
 const { Op } = require("sequelize");
@@ -7,20 +7,20 @@ const { Op } = require("sequelize");
 //Add books ---- (post) goes to BookCreate component (i.e. book/create)
 router.post("/create", (req, res) => {
   //console.log(req.user);
-  let bookModel = {
-    author: req.body.author,
-    title: req.body.title,
-    genre: req.body.genre,
-    total_pages: req.body.total_pages,
-    rating: req.body.rating,
-    description: req.body.description,
-    year_published: req.body.year_published,
-    read_status: req.body.read_status,
+  let book = { //changed bookModel to book
+    author: req.body.book.author, //added .book btwn body and final param per BookCreate. RK. 
+    title: req.body.book.title,
+    genre: req.body.book.genre,
+    total_pages: req.body.book.total_pages,
+    rating: req.body.book.rating,
+    description: req.body.book.description,
+    year_published: req.body.book.year_published,
+    read_status: req.body.book.read_status,
     owner_id: req.user.id,
   };
 
-  book
-    .create(bookModel)
+  Book //changed book to Book bc it references the Book model imported. RK. 
+    .create(book) //changed .create(bookModel) to .create(book). RK. 
     //.then((book) => console.log("Book Create:", book))
     .then((book) => res.status(200).json(book))
     .catch((err) => res.status(500).json({ error: err }));
@@ -29,7 +29,7 @@ router.post("/create", (req, res) => {
 //Get books already read ---- if you click “see more” then it goes to Book to display one book with all the deets, (i.e. /book/read)
 router.get("/read", validateSession, (req, res) => {
   let userid = req.user.id; //make sure owner_id = req.user.id (check user model & rest of controller)
-  book
+  Book
     .findAll({
       where: { owner_id: userid, read_status: "read" },
     })
@@ -40,7 +40,7 @@ router.get("/read", validateSession, (req, res) => {
 //Get books currently reading ---- if you click “see more” then it goes to Book to display one book with all the deets (i.e. /book/reading)
 router.get("/reading", validateSession, (req, res) => {
   let userid = req.user.id; //make sure owner_id = req.user.id (check user model & rest of controller)
-  book
+  Book //changed book to Book. RK. 
     .findAll({
       where: { owner_id: userid, read_status: "reading" },
     })
@@ -51,7 +51,7 @@ router.get("/reading", validateSession, (req, res) => {
 //Get books to read --- if you click “see more” then it goes to Book to display one book with all the deets (i.e. /book/to-read)
 router.get("/to-read", validateSession, (req, res) => {
   let userid = req.user.id; //make sure owner_id = req.user.id (check user model & rest of controller)
-  book
+  Book //changed book to Book. RK. 
     .findAll({
       where: { owner_id: userid, read_status: "to-read" },
     })
@@ -62,21 +62,21 @@ router.get("/to-read", validateSession, (req, res) => {
 //Update book ---- goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
 router.put("/edit/:bookId", validateSession, function (req, res) {
-  const updateBookInfo = {
-    author: req.body.author,
-    title: req.body.title,
-    genre: req.body.genre,
-    total_pages: req.body.total_pages,
-    rating: req.body.rating,
-    description: req.body.description,
-    year_published: req.body.year_published,
-    read_status: req.body.read_status,
+  const book = {
+    author: req.body.book.author,
+    title: req.body.book.title,
+    genre: req.body.book.genre,
+    total_pages: req.body.book.total_pages,
+    rating: req.body.book.rating,
+    description: req.body.book.description,
+    year_published: req.body.book.year_published,
+    read_status: req.body.book.read_status,
   };
 
-  const query = { where: { owner_id: req.body.owner_id } }; //req.params.owner_id?
+  const query = { where: { owner_id: req.user.id, id: req.params.bookId } }; 
 
-  book
-    .update(updateBookInfo, query)
+  Book //changed book to Book. RK. 
+    .update(book, query)
     .then((book) =>
       res
         .status(200)
@@ -87,8 +87,9 @@ router.put("/edit/:bookId", validateSession, function (req, res) {
 
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
+//may need to change path to /delete/:bookId
 router.delete("/:id", (req, res) => {
-  book
+  Book //changed book to Book. RK. 
     .destroy({ where: { id: req.params.id } })
     .then(() => res.status(200).json({ message: "Book has been deleted" }))
     .catch((err) => res.status(500).json({ error: err }));
