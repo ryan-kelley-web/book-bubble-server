@@ -7,20 +7,19 @@ const { Op } = require("sequelize");
 //Add books ---- (post) goes to BookCreate component (i.e. book/create)
 router.post("/create", (req, res) => {
   //console.log(req.user);
-  let book = { //changed bookModel to book
-    author: req.body.book.author, //added .book btwn body and final param per BookCreate. RK. 
-    title: req.body.book.title,
-    genre: req.body.book.genre,
-    total_pages: req.body.book.total_pages,
-    rating: req.body.book.rating,
-    description: req.body.book.description,
-    year_published: req.body.book.year_published,
-    read_status: req.body.book.read_status,
+  let bookModel = { 
+    author: req.body.author, //added .book btwn body and final param per BookCreate. RK. 
+    title: req.body.title,
+    genre: req.body.genre,
+    total_pages: req.body.total_pages,
+    rating: req.body.rating,
+    description: req.body.description,
+    year_published: req.body.year_published,
+    read_status: req.body.read_status,
     owner_id: req.user.id,
   };
 
-  Book //changed book to Book bc it references the Book model imported. RK. 
-    .create(book) //changed .create(bookModel) to .create(book). RK. 
+  Book.create(bookModel) 
     //.then((book) => console.log("Book Create:", book))
     .then((book) => res.status(200).json(book))
     .catch((err) => res.status(500).json({ error: err }));
