@@ -6,7 +6,7 @@ let sequelize = require('./db');
 let book = require('./controllers/book-controller') 
 let user = require('./controllers/user-controller'); 
 
-sequelize.sync(); //{force: true} inside .sync() "drops all tables" each time server runs. enter and delete in order to drop tables only once. 
+sequelize.sync( ); //{force: true} inside .sync() "drops all tables" each time server runs. enter and delete in order to drop tables only once. 
 
 app.use(require('./middleware/headers')); 
 
