@@ -3,11 +3,12 @@ const Book = require("../db").import("../models/book"); //models should be upper
 const { restart } = require("nodemon");
 const validateSession = require("../middleware/validate-session");
 const { Op } = require("sequelize");
+const book = require("../models/book");
 
 //Add books ---- (post) goes to BookCreate component (i.e. book/create)
 router.post("/create", (req, res) => {
   //console.log(req.user);
-  let bookModel = { 
+  let bookModel = {
     author: req.body.author, //added .book btwn body and final param per BookCreate. RK. 
     title: req.body.title,
     genre: req.body.genre,
@@ -19,7 +20,7 @@ router.post("/create", (req, res) => {
     owner_id: req.user.id,
   };
 
-  Book.create(bookModel) 
+  Book.create(bookModel)
     //.then((book) => console.log("Book Create:", book))
     .then((book) => res.status(200).json(book))
     .catch((err) => res.status(500).json({ error: err }));
@@ -60,29 +61,53 @@ router.get("/to-read", validateSession, (req, res) => {
 
 //Update book ---- goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
+
 router.put("/edit/:bookId", validateSession, function (req, res) {
-  const book = {
-    author: req.body.book.author,
-    title: req.body.book.title,
-    genre: req.body.book.genre,
-    total_pages: req.body.book.total_pages,
-    rating: req.body.book.rating,
-    description: req.body.book.description,
-    year_published: req.body.book.year_published,
-    read_status: req.body.book.read_status,
+  let bookModel = {
+    author: req.body.author, //added .book btwn body and final param per BookCreate. RK. 
+    title: req.body.title,
+    genre: req.body.genre,
+    total_pages: req.body.total_pages,
+    rating: req.body.rating,
+    description: req.body.description,
+    year_published: req.body.year_published,
+    read_status: req.body.read_status,
+    owner_id: req.user.id,
   };
 
-  const query = { where: { owner_id: req.user.id, id: req.params.bookId } }; 
-
-  Book //changed book to Book. RK. 
-    .update(book, query)
-    .then((book) =>
-      res
-        .status(200)
-        .json({ message: "Your book has been edited successfully" })
-    ) // books plural?
-    .catch((err) => res.status(500).json({ error: err }));
+  Book.update(bookModel, 
+    {where: { owner_id: req.user.id, id: req.params.bookId}})
+  .then((book) => res.status(200).json(book))
+  .catch((err) => res.status(500).json({ error: err }));
 });
+
+
+
+
+//UPDATE DRAFT 1
+// router.put("/edit/:bookId", validateSession, function (req, res) {
+//   const book = {
+//     author: req.body.book.author,
+//     title: req.body.book.title,
+//     genre: req.body.book.genre,
+//     total_pages: req.body.book.total_pages,
+//     rating: req.body.book.rating,
+//     description: req.body.book.description,
+//     year_published: req.body.book.year_published,
+//     read_status: req.body.book.read_status,
+//   };
+
+//   const query = { where: { owner_id: req.user.id, id: req.params.bookId } }; 
+
+//   Book //changed book to Book. RK. 
+//     .update(book, query)
+//     .then((book) =>
+//       res
+//         .status(200)
+//         .json({ message: "Your book has been edited successfully" })
+//     ) // books plural?
+//     .catch((err) => res.status(500).json({ error: err }));
+// });
 
 //Delete book ----goes to BookEdit component (i.e. /book/:id)
 // May need to change route to /:bookId
@@ -99,20 +124,27 @@ router.get("/search/:query", validateSession, (req, res) => {
   console.log(req);
   const { query } = req.params;
   let userid = req.user.id;
- // console.log(userid, query);
+  // console.log(userid, query);
   Book
     .findAll(
-        { where: {
-        [Op.or]: [
-            {[Op.and]: [
-                { title: { [Op.substring]: query} }, 
+      {
+        where: {
+          [Op.or]: [
+            {
+              [Op.and]: [
+                { title: { [Op.substring]: query } },
                 { owner_id: userid }
-            ]},
-            {[Op.and]: [
-                { author: { [Op.substring]: query} }, 
+              ]
+            },
+            {
+              [Op.and]: [
+                { author: { [Op.substring]: query } },
                 { owner_id: userid }
-            ]}
-        ]}})
+              ]
+            }
+          ]
+        }
+      })
     .then((books) => res.status(200).json(books))
     .catch((err) => res.status(500).json({ error: err }));
 });
