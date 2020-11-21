@@ -9,9 +9,7 @@
   },
   "author": "Group 1",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^2.0.6"
-  },
+  "devDependencies": {},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.0.0",
