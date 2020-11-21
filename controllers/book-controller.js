@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const Book = require("../db").import("../models/book"); //models should be uppercase per syntax std. RK via IM. 
-const { restart } = require("nodemon");
 const validateSession = require("../middleware/validate-session");
 const { Op } = require("sequelize");
 const book = require("../models/book");
